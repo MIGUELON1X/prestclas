@@ -9,6 +9,8 @@ User.createUser = async (nombre, usuario, correo, contraseña) => {
       [nombre, usuario, correo, contraseña]
     );
 
+    console.log(response.insertId);
+
     return response.insertId;
   } catch (error) {
     return new Error(error.message);
@@ -17,12 +19,12 @@ User.createUser = async (nombre, usuario, correo, contraseña) => {
 
 User.sendToFrontend = async (id) => {
   try {
-    const response = await db.query(
+    const [response] = await db.query(
       "SELECT nombre, usuario, correo FROM usuarios WHERE id = ?",
       [id]
     );
 
-    return response;
+    return response[0];
   } catch (error) {
     return new Error(error.message);
   }
