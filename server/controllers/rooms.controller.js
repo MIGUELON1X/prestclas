@@ -1,35 +1,21 @@
 import RoomsModel from "../models/Room.model.js";
 
 export const createRoom = async (req, res) => {
+  const { nombre, tipo, descripcion } = req.body;
+
   try {
-    const { nombreSala, tipoSala, descripcion } = req.body;
+    const taskId = await RoomsModel.createRoom(nombre, tipo, descripcion);
 
-    const roomId = await RoomsModel.createRoom(
-      nombreSala,
-      tipoSala,
-      descripcion
-    );
-
-    if (roomId instanceof Error) {
+    if (taskId instanceof Error) {
       return res
         .status(500)
-        .json({ message: "Error en roomId", error: roomId.message });
+        .json({ message: "Error en taskId", error: taskId.message });
     } else {
-      if (roomId !== null) {
-        const roomData = await RoomsModel.sendToFrontend(roomId);
-
-        if (roomData instanceof Error) {
-          return res
-            .status(500)
-            .json({ message: "Error en roomData", error: roomData.error });
-        } else {
-          return res
-            .status(201)
-            .json({ message: "Sala creada", id: roomId, room: roomData});
-        }
-      }
+      return res.status(200).json({ id: taskId, nombre, tipo, descripcion });
     }
   } catch (error) {
-    return res.status(400).json({ message: error.message });
+    return res
+      .status(500)
+      .json({ message: "Error en roomsControllers", error: error.message });
   }
 };

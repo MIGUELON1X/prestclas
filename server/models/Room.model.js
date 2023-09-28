@@ -15,17 +15,4 @@ Rooms.createRoom = async (nombreSala, tipoSala, descripcion) => {
   }
 };
 
-Rooms.sendToFrontend = async (id) => {
-  try {
-    const [response] = await db.query(
-      "SELECT nombre, descripcion, tipo_de_sala FROM salas WHERE id = ?",
-      [id]
-    );
-
-    return response[0];
-  } catch (error) {
-    return new Error(error.message);
-  }
-};
-
 export default Rooms;
