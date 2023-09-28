@@ -25,4 +25,12 @@ Rooms.deleteRoom = async (id) => {
   }
 };
 
+Rooms.getRooms = async () => {
+  try {
+    const [response] = await db.query("SELECT * FROM salas");
+
+    return response;
+  } catch (error) {}
+};
+
 export default Rooms;

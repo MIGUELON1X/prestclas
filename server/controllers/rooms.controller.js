@@ -45,7 +45,24 @@ export const updateRoom = async (req, res) => {
 };
 
 export const getRooms = async (req, res) => {
-  res.send("Obteniendo salas");
+  try {
+    const rooms = await RoomsModel.getRooms();
+
+    if (rooms instanceof Error) {
+      return res
+        .status(500)
+        .json({ message: "Error al obtener las salas", error: rooms.message });
+    } else if (rooms.length === 0) {
+      return res.status(404).json({ message: "Aún no hay salas creadas" });
+    } else {
+      const [roomsSinMatriz] = rooms
+      return res.status(200).json(roomsSinMatriz);
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Error al obtener las salas", error: error.message });
+  }
 };
 
 export const getRoom = async (req, res) => {
