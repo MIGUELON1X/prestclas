@@ -33,4 +33,14 @@ Rooms.getRooms = async () => {
   } catch (error) {}
 };
 
+Rooms.getRoom = async (id) => {
+  try {
+    const [response] = await db.query("SELECT * FROM salas WHERE id = ?", [id]);
+
+    return response;
+  } catch (error) {
+    return new Error(error.message);
+  }
+};
+
 export default Rooms;

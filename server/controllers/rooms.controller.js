@@ -65,5 +65,19 @@ export const getRooms = async (req, res) => {
 };
 
 export const getRoom = async (req, res) => {
-  res.send("Obteniendo sala");
+  try {
+    const room = await RoomsModel.getRoom(req.params.id);
+
+    if (room instanceof Error) {
+      return res.status(500).json({message: "Error al obtener la sala", error: room.message})
+    } else if (room.length === 0) {
+      return res.status(404).json({message: "Tarea no encontrada"})
+    } else {
+      return res.json(room[0])
+    }
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Error al obtener la sala", error: error.message });
+  }
 };
