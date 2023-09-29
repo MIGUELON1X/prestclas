@@ -11,7 +11,7 @@ export const createRoom = async (req, res) => {
         .status(500)
         .json({ message: "Error en taskId", error: taskId.message });
     } else {
-      return res.status(200).json({ id: taskId, nombre, tipo, descripcion });
+      return res.json({ id: taskId, nombre, tipo, descripcion });
     }
   } catch (error) {
     return res
@@ -55,7 +55,7 @@ export const getRooms = async (req, res) => {
     } else if (rooms.length === 0) {
       return res.status(404).json({ message: "Aún no hay salas creadas" });
     } else {
-      return res.status(200).json(rooms);
+      return res.json(rooms);
     }
   } catch (error) {
     return res
