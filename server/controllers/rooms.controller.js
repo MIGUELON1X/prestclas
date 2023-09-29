@@ -55,8 +55,7 @@ export const getRooms = async (req, res) => {
     } else if (rooms.length === 0) {
       return res.status(404).json({ message: "Aún no hay salas creadas" });
     } else {
-      const [roomsSinMatriz] = rooms
-      return res.status(200).json(roomsSinMatriz);
+      return res.status(200).json(rooms);
     }
   } catch (error) {
     return res
