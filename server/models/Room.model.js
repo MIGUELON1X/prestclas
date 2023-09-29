@@ -43,4 +43,17 @@ Rooms.getRoom = async (id) => {
   }
 };
 
+Rooms.upadteRoom = async (Object, id) => {
+  try {
+    const [response] = await db.query("UPDATE salas SET ? WHERE id = ?", [
+      Object,
+      id,
+    ]);
+
+    return response;
+  } catch (error) {
+    return new Error(error.message);
+  }
+};
+
 export default Rooms;

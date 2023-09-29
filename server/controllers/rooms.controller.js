@@ -41,7 +41,25 @@ export const deleteRoom = async (req, res) => {
 };
 
 export const updateRoom = async (req, res) => {
-  res.send("Actualizando sala");
+  try {
+    const result = await RoomsModel.upadteRoom(req.body, req.params.id);
+
+    if (result instanceof Error) {
+      return res.status(500).json({
+        message: "Error al intentar actualizar la información",
+        error: result.error,
+      });
+    } else if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Sala no encontrada" });
+    } else {
+      return res.status(204).send("");
+    }
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error al intentar actualizar la información",
+      error: error.message,
+    });
+  }
 };
 
 export const getRooms = async (req, res) => {
@@ -69,11 +87,13 @@ export const getRoom = async (req, res) => {
     const room = await RoomsModel.getRoom(req.params.id);
 
     if (room instanceof Error) {
-      return res.status(500).json({message: "Error al obtener la sala", error: room.message})
+      return res
+        .status(500)
+        .json({ message: "Error al obtener la sala", error: room.message });
     } else if (room.length === 0) {
-      return res.status(404).json({message: "Tarea no encontrada"})
+      return res.status(404).json({ message: "Sala no encontrada" });
     } else {
-      return res.json(room[0])
+      return res.json(room[0]);
     }
   } catch (error) {
     return res
