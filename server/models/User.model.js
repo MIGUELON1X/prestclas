@@ -22,17 +22,6 @@ User.createUser = async (nombre, usuario, correo, contraseña) => {
   }
 };
 
-User.sendToFrontend = async (id) => {
-  try {
-    const [response] = await db.query(
-      "SELECT nombre, usuario, correo FROM usuarios WHERE id = ?",
-      [id]
-    );
 
-    return response[0];
-  } catch (error) {
-    return new Error(error.message);
-  }
-};
 
 export default User;
