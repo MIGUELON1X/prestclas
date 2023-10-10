@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 06-10-2023 a las 16:08:18
+-- Tiempo de generación: 10-10-2023 a las 19:20:27
 -- Versión del servidor: 10.4.28-MariaDB
--- Versión de PHP: 8.2.4
+-- Versión de PHP: 8.0.28
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,11 +28,11 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `prestamos` (
-  `id` int(11) UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
   `usuarios_id` int(10) UNSIGNED NOT NULL,
   `estado_prestamo` varchar(45) NOT NULL,
   `fecha_prestamo` date NOT NULL,
-  `fecha_reserva` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_reserva` timestamp NOT NULL DEFAULT current_timestamp(),
   `hora_inicial` int(2) NOT NULL,
   `hora_final` int(2) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -44,8 +44,8 @@ CREATE TABLE `prestamos` (
 --
 
 CREATE TABLE `prestamos_recursos` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `prestamo_id` int(11) UNSIGNED NOT NULL,
+  `id` int(10) UNSIGNED NOT NULL,
+  `prestamo_id` int(10) UNSIGNED NOT NULL,
   `recurso_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -57,7 +57,7 @@ CREATE TABLE `prestamos_recursos` (
 
 CREATE TABLE `prestamos_salas` (
   `id` int(10) UNSIGNED NOT NULL,
-  `prestamos_id` int(11) UNSIGNED NOT NULL,
+  `prestamo_id` int(10) UNSIGNED NOT NULL,
   `salas_id` int(10) UNSIGNED NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -68,9 +68,9 @@ CREATE TABLE `prestamos_salas` (
 --
 
 CREATE TABLE `recursos` (
-  `id` int(11) UNSIGNED NOT NULL,
-  `estado_recursos` int(45) NOT NULL,
-  `descripción` varchar(300) NOT NULL
+  `id` int(10) UNSIGNED NOT NULL,
+  `estado_recurso` varchar(45) NOT NULL,
+  `descripcion` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -82,7 +82,7 @@ CREATE TABLE `recursos` (
 CREATE TABLE `salas` (
   `id` int(10) UNSIGNED NOT NULL,
   `estado_salas` varchar(300) NOT NULL,
-  `nombre` varchar(50) DEFAULT 'sala',
+  `nombre` varchar(50) NOT NULL DEFAULT 'Sala #',
   `tipo_de_sala` varchar(50) NOT NULL,
   `descripcion` varchar(300) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -96,9 +96,9 @@ CREATE TABLE `salas` (
 CREATE TABLE `usuarios` (
   `id` int(10) UNSIGNED NOT NULL,
   `nombre` varchar(45) NOT NULL,
-  `usuario` varchar(50) NOT NULL,
-  `correo` varchar(50) NOT NULL,
-  `contraseña` varchar(40) NOT NULL
+  `usuario` varchar(45) NOT NULL,
+  `correo` varchar(70) NOT NULL,
+  `contraseña` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -125,7 +125,7 @@ ALTER TABLE `prestamos_recursos`
 --
 ALTER TABLE `prestamos_salas`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `prestamos_id` (`prestamos_id`),
+  ADD KEY `prestamo_id` (`prestamo_id`),
   ADD KEY `salas_id` (`salas_id`);
 
 --
@@ -144,9 +144,7 @@ ALTER TABLE `salas`
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `usuario` (`usuario`),
-  ADD UNIQUE KEY `correo` (`correo`);
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -156,13 +154,13 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `prestamos`
 --
 ALTER TABLE `prestamos`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `prestamos_recursos`
 --
 ALTER TABLE `prestamos_recursos`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `prestamos_salas`
@@ -174,19 +172,19 @@ ALTER TABLE `prestamos_salas`
 -- AUTO_INCREMENT de la tabla `recursos`
 --
 ALTER TABLE `recursos`
-  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `salas`
 --
 ALTER TABLE `salas`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas
@@ -202,15 +200,15 @@ ALTER TABLE `prestamos`
 -- Filtros para la tabla `prestamos_recursos`
 --
 ALTER TABLE `prestamos_recursos`
-  ADD CONSTRAINT `prestamos_recursos_ibfk_1` FOREIGN KEY (`recurso_id`) REFERENCES `recursos` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `prestamos_recursos_ibfk_2` FOREIGN KEY (`prestamo_id`) REFERENCES `prestamos` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `prestamos_recursos_ibfk_1` FOREIGN KEY (`prestamo_id`) REFERENCES `prestamos` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `prestamos_recursos_ibfk_2` FOREIGN KEY (`recurso_id`) REFERENCES `recursos` (`id`) ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `prestamos_salas`
 --
 ALTER TABLE `prestamos_salas`
-  ADD CONSTRAINT `prestamos_salas_ibfk_1` FOREIGN KEY (`salas_id`) REFERENCES `salas` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `prestamos_salas_ibfk_2` FOREIGN KEY (`prestamos_id`) REFERENCES `prestamos` (`id`) ON UPDATE CASCADE;
+  ADD CONSTRAINT `prestamos_salas_ibfk_1` FOREIGN KEY (`prestamo_id`) REFERENCES `prestamos` (`id`) ON UPDATE CASCADE,
+  ADD CONSTRAINT `prestamos_salas_ibfk_2` FOREIGN KEY (`salas_id`) REFERENCES `salas` (`id`) ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
