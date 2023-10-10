@@ -17,39 +17,33 @@ export const register = async (req, res) => {
         .status(500)
         .json({ message: "Error en userId", error: userId.message });
     } else {
-      if (userId !== null) {
-        const userData = await UserModel.sendToFrontend(userId);
+      const payload = {
+        id: userId,
+      };
 
-        if (userData instanceof Error) {
-          return res
-            .status(500)
-            .json({ message: "Error en userData", error: userData.message });
-        } else {
-          const payload = {
-            id: userId,
-          };
-
-          if (userId === 1) {
-            payload.rol = "Admin";
-            const token = await createAdminToken(payload);
-            res.cookie("token", token);
-          } else {
-            payload.rol = "Usuario";
-            const token = await createUserToken(payload);
-            res.cookie("token", token);
-          }
-          return res.status(201).json({
-            id: userId,
-            nombre,
-            usuario,
-            correo,
-          });
-        }
+      if (userId === 1) {
+        payload.rol = "Admin";
+        const token = await createAdminToken(payload);
+        res.cookie("token", token);
+      } else {
+        payload.rol = "Usuario";
+        const token = await createUserToken(payload);
+        res.cookie("token", token);
       }
+      return res.status(201).json({
+        id: userId,
+        nombre,
+        usuario,
+        correo,
+      });
     }
-
-    return res.send("Usuario creado");
   } catch (error) {
     return res.json({ message: "Usario no creado", error: error.message });
   }
+};
+
+export const login = async (req, res) => {
+  try {
+    const { correo, contraseña } = req.body;
+  } catch (error) {}
 };
