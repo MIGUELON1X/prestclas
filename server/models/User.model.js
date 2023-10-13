@@ -1,17 +1,12 @@
 import db from "../db.js";
-import bcrypt from "bcryptjs";
-
 
 const User = {};
 
-User.createUser = async (nombre, usuario, correo, contraseña) => {
+User.register = async (nombre, usuario, correo, contraseña) => {
   try {
-    const contraseñaEcnriptada = await bcrypt.hash(contraseña, 10);
-
-
     const [response] = await db.query(
       "INSERT INTO usuarios (nombre, usuario, correo, contraseña) VALUES (?,?,?,?)",
-      [nombre, usuario, correo, contraseñaEcnriptada]
+      [nombre, usuario, correo, contraseña]
     );
 
     console.log(response.insertId);
@@ -22,6 +17,16 @@ User.createUser = async (nombre, usuario, correo, contraseña) => {
   }
 };
 
+User.login = async (correo) => {
+  try {
+    const [user] = await db.query("SELECT * FROM usuarios WHERE correo = ?", [
+      correo,
+    ]);
 
+    return user;
+  } catch (error) {
+    return new Error(error.message);
+  }
+};
 
 export default User;

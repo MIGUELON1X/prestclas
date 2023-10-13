@@ -144,7 +144,9 @@ ALTER TABLE `salas`
 -- Indices de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY (`usuario`),
+  ADD UNIQUE KEY (`correo`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
