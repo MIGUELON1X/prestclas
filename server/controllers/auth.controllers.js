@@ -22,6 +22,7 @@ export const register = async (req, res) => {
     } else {
       const payload = {
         id: userId,
+        usuario,
       };
 
       if (userId === 1) {
@@ -65,6 +66,7 @@ export const login = async (req, res) => {
 
       const payload = {
         id: user[0].id,
+        usuario: user[0].usuario,
       };
 
       if (user[0].id === 1) {
