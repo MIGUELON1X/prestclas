@@ -29,4 +29,16 @@ User.login = async (correo) => {
   }
 };
 
+User.findById = async (id) => {
+  try {
+    const [user] = await db.query("SELECT * FROM usuarios WHERE id = ?", [id]);
+
+    console.log(user);
+
+    return user;
+  } catch (error) {
+    return new Error(error.message);
+  }
+};
+
 export default User;
